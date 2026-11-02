@@ -50,6 +50,8 @@ jobs:
           cp requirements.txt release_candidate/
           cp train_model.py release_candidate/
           cp quality_gate.py release_candidate/
+          cp Dockerfile release_candidate/
+          cp .dockerignore release_candidate/
           printf "Student Result Prediction ML Application\nRun: python app.py\nHealth: GET /\nPrediction: POST /predict\n" > release_candidate/DEPLOYMENT.txt
 
       - name: Upload release candidate
