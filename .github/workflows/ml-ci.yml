@@ -1,3 +1,4 @@
+
 name: Student Result ML CI
 
 on:
@@ -39,14 +40,22 @@ jobs:
 
       - name: Run automated ML tests
         run: python -m unittest discover -v
-        
-      - name: Upload validated ML artifacts
-        uses: actions/upload-artifact@v7
+
+      - name: Prepare release candidate
+        run: |
+          mkdir -p release_candidate
+          cp app.py release_candidate/
+          cp student_result_model.pkl release_candidate/
+          cp metrics.json release_candidate/
+          cp requirements.txt release_candidate/
+          cp train_model.py release_candidate/
+          cp quality_gate.py release_candidate/
+          printf "Student Result Prediction ML Application\nRun: python app.py\nHealth: GET /\nPrediction: POST /predict\n" > release_candidate/DEPLOYMENT.txt
+
+      - name: Upload release candidate
+        uses: actions/upload-artifact@v4
         with:
-          name: student-result-ml-artifacts
-          path: |
-            student_result_model_missing.pkl
-            metrics.json
-            student_results.csv
+          name: student-result-ml-release
+          path: release_candidate/
           if-no-files-found: error
           retention-days: 7
